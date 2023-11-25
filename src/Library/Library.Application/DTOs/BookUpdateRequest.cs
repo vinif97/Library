@@ -10,5 +10,6 @@ namespace Library.Application.DTOs
         public string? AuthorName { get; set; }
         [DisplayFormat(ConvertEmptyStringToNull = true)]
         public string? Description { get; set; }
+        public int? ReleaseYear { get; set; }
     }
 }

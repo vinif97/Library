@@ -23,8 +23,8 @@ namespace Library.Application.Services
 
         public async Task<IResult> AddBook(BookCreateRequest bookCreateRequest)
         {
-            Book book = new Book(bookCreateRequest.Title, bookCreateRequest.AuthorName,
-                bookCreateRequest.Description);
+            Book book = new Book(bookCreateRequest.Title, bookCreateRequest.AuthorName, 
+                bookCreateRequest.ReleaseYear, bookCreateRequest.Description);
             int newBookId = await _bookRepository.AddBook(book);
 
             return new SuccessResult<int>(newBookId);

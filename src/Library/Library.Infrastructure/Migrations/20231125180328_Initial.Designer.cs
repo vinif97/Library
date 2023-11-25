@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Library.Infrastructure.Migrations
 {
     [DbContext(typeof(LibraryContext))]
-    [Migration("20231124123257_Initial")]
+    [Migration("20231125180328_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,6 +37,9 @@ namespace Library.Infrastructure.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("ReleaseYear")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(256)
@@ -60,8 +63,8 @@ namespace Library.Infrastructure.Migrations
                                 .HasColumnName("FirstName");
 
                             b1.Property<string>("Surname")
-                                .HasMaxLength(256)
-                                .HasColumnType("nvarchar(256)")
+                                .HasMaxLength(512)
+                                .HasColumnType("nvarchar(512)")
                                 .HasColumnName("Surname");
 
                             b1.HasKey("BookId");

@@ -9,5 +9,6 @@ namespace Library.Application.DTOs
         public string? Description { get; set; }
         public string? CoverUrl { get; set; }
         public string AuthorName { get; set; }
+        public int ReleaseYear { get; set; }
     }
 }

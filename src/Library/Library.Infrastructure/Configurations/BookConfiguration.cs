@@ -14,6 +14,9 @@ namespace Library.Infrastructure.Configurations
                 .HasMaxLength(256)
                 .IsRequired();
 
+            builder.Property(book => book.ReleaseYear)
+                .IsRequired();
+
             builder.Property(book => book.Description)
                 .IsRequired(false);
 

@@ -12,12 +12,13 @@ namespace Library.Application.Tests.Helpers
         [Fact]
         public void UpdatePropertiesSuccessfullyWhenValid()
         { 
-            Book book = new Book("Test Name", "Wrong name");
+            Book book = new Book("Test Name", "Wrong name", 1950);
             BookUpdateRequest updateRequest = new BookUpdateRequest() 
             {
                 Title= "New and Better Title",
                 AuthorName = "New Better Author Name",
-                Description = "Now this is a description"
+                Description = "Now this is a description",
+                ReleaseYear = 2006
             };
             Author author = new Author(updateRequest.AuthorName);
 
@@ -27,6 +28,7 @@ namespace Library.Application.Tests.Helpers
             Assert.Equal(author.FirstName, book.Author.FirstName);
             Assert.Equal(author.Surname, book.Author.Surname);
             Assert.Equal(updateRequest.Description, book.Description);
+            Assert.Equal(updateRequest.ReleaseYear, book.ReleaseYear);
         }
 
         [Fact]
@@ -34,19 +36,22 @@ namespace Library.Application.Tests.Helpers
         {
             string expectedTitle = "New and Better Title";
             string expectedaAuthorName = "Amanda França de Oliveira";
+            int expectedReleaseYear = 2015;
 
-            Book book = new Book("Test Title", expectedaAuthorName);
+            Book book = new Book("Test Title", expectedaAuthorName, expectedReleaseYear);
             BookUpdateRequest updateRequest = new BookUpdateRequest()
             {
                 Title = "New and Better Title",
                 AuthorName = null,
-                Description = null
+                Description = null,
+                ReleaseYear = null
             };
 
             book.UpdatePropertiesIfNotNull(updateRequest, SetMethodsPreffix);
 
             Assert.Equal(expectedTitle, book.Title);
             Assert.Equal(expectedaAuthorName, book.Author.FullName);
+            Assert.Equal(expectedReleaseYear, book.ReleaseYear);
         }
     }
 }

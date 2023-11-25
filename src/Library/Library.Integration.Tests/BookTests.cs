@@ -24,7 +24,7 @@ namespace Library.Integration.Tests
         [Fact]
         public async Task AddBookSuccessFullyWhenRequested()
         {
-            BookCreateRequest requestBody = new("Harry Different", "Harry Valderdead");
+            BookCreateRequest requestBody = new("Harry Different", "Harry Valderdead", 2022);
 
             string payload = JsonSerializer.Serialize(requestBody);
             HttpContent content = new StringContent(payload, Encoding.UTF8, MediaTypeJson);
@@ -37,22 +37,27 @@ namespace Library.Integration.Tests
         [Fact]
         public async Task UpdateBookSuccessFullyWhenRequested()
         {
-            BookCreateRequest requestBody = new("Harry Different", "Harry Valderdead");
+            BookCreateRequest requestBody = new("Harry The Same", "Amanda Oliveira", 1999);
 
             string payload = JsonSerializer.Serialize(requestBody);
             HttpContent content = new StringContent(payload, Encoding.UTF8, MediaTypeJson);
 
             string bookId = await CreateBookTest(content);
 
+            BookUpdateRequest requestUpdateBody = new()
+            {
+                Title = "Vinicius Magic",
+                AuthorName = "Vinicius França de Oliveira",
+                Description = "A Short Description"
+            };
 
-
-            //Client.PatchAsync($"/{BookApiPath}");
+            await UpdateBookTest(requestUpdateBody, bookId);
         }
 
         [Fact]
         public async Task DeleteBookByIdSuccessFullyWhenRequested()
         {
-            BookCreateRequest requestBody = new("Ordem dos Guerreiros", "Willson Zamarchi da Rosé");
+            BookCreateRequest requestBody = new("Ordem dos Guerreiros", "Willson Zamarchi da Rosé", 2005);
 
             string payload = JsonSerializer.Serialize(requestBody);
             HttpContent content = new StringContent(payload, Encoding.UTF8, MediaTypeJson);
@@ -105,6 +110,24 @@ namespace Library.Integration.Tests
             var response = await Client.DeleteAsync($"/{BookApiPath}/{bookId}");
 
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+        }
+
+        private async Task UpdateBookTest(BookUpdateRequest expectedResult, string bookId)
+        {
+            string payload = JsonSerializer.Serialize(expectedResult);
+            HttpContent content = new StringContent(payload, Encoding.UTF8, MediaTypeJson);
+
+            var response = await Client.PatchAsync($"/{BookApiPath}/{bookId}", content);
+            var result = await response.Content.ReadAsStringAsync();
+            var bookResponse = JsonSerializer.Deserialize<BookResponse>(result, _options);
+
+            Assert.NotNull(response);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            Assert.NotNull(bookResponse);
+            Assert.Equal(expectedResult.Title, bookResponse.Title);
+            Assert.Equal(expectedResult.Description, bookResponse.Description);
+            Assert.Equal(expectedResult.AuthorName, bookResponse.AuthorName);
         }
     }
 }

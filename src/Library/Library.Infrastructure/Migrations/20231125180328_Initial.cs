@@ -17,8 +17,9 @@ namespace Library.Infrastructure.Migrations
                     Title = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CoverUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ReleaseYear = table.Column<int>(type: "int", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: true),
-                    Surname = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true)
+                    Surname = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: true)
                 },
                 constraints: table =>
                 {
