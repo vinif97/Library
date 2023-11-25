@@ -4,18 +4,29 @@ services:
   library.webapi:
     image: ${DOCKER_REGISTRY-}librarywebapi
     environment:
-      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_URLS=http://+:80
+      - DB_SA_PASSWORD=Passw0rd!
+      - DB_HOST=sqldatabase
+      - DB_NAME=Library
     ports:
-      - "80"
-      - "443"
+      - "8000:80"
     build:
       context: .
-      dockerfile: KitchenRouter.WebAPI/Dockerfile
+      dockerfile: Library.WebAPI/Dockerfile
     depends_on: 
       - sqldatabase
+    networks:
+      - librarynetwork
 
   sqldatabase:
     image: mcr.microsoft.com/mssql/server:2022-latest
+    ports:
+      - 3000:1443
     environment:
-      - PASSWORD=Passw0rd!
+      - SA_PASSWORD=Passw0rd!
       - ACCEPT_EULA=Y
+    networks:
+      - librarynetwork
+
+networks:
+  librarynetwork:

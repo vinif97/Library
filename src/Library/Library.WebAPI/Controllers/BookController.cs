@@ -2,9 +2,7 @@
 using Library.Application.Helpers;
 using Library.Application.Result;
 using Library.Application.Services.Interfaces;
-using Library.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
-using System.Reflection.Metadata.Ecma335;
 
 namespace Library.WebAPI.Controllers
 {
@@ -50,7 +48,7 @@ namespace Library.WebAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> AddBook(BookCreateRequest bookCreateRequest)
         {
-            var result = await _bookService.AddBook(bookCreateRequest);
+                var result = await _bookService.AddBook(bookCreateRequest);
 
             return result switch
             {
