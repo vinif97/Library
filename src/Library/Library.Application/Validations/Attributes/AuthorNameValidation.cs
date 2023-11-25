@@ -13,7 +13,7 @@ namespace Library.Application.Validations.Attributes
         {
             if (string.IsNullOrWhiteSpace((string?)value))
             {
-                return new ValidationResult($"{validationContext.MemberName} is required.");
+                return new ValidationResult($"{validationContext.MemberName} cannot be null or empty");
             }
 
             var (firstname, surname) = value.ToString()!.GetFirstNameAndSurnameFromFullName();

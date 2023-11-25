@@ -46,9 +46,9 @@ namespace Library.WebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddBook(BookCreateRequest bookCreateRequest)
+        public async Task<IActionResult> AddBook([FromForm]BookCreateRequest bookCreateRequest)
         {
-                var result = await _bookService.AddBook(bookCreateRequest);
+            var result = await _bookService.AddBook(bookCreateRequest);
 
             return result switch
             {

@@ -14,17 +14,30 @@ namespace Library.Application.Services
         private const string BookSetMethodsPreffix = "Set";
         private readonly IMapper _mapper;
         private readonly IBookRepository _bookRepository;
+        private readonly IImageUploadService _uploadService;
+        private readonly IImageRetrievaService _retrievalService;
 
-        public BookService(IMapper mapper, IBookRepository bookRepository)
+        public BookService(IMapper mapper, IBookRepository bookRepository, IImageUploadService uploadService,
+            IImageRetrievaService retrievalService)
         {
             _bookRepository = bookRepository;
             _mapper = mapper;
+            _uploadService = uploadService;
+            _retrievalService = retrievalService;
         }
 
         public async Task<IResult> AddBook(BookCreateRequest bookCreateRequest)
         {
+            string? coverUrl = null;
+
+            if (bookCreateRequest.File is not null)
+            {
+                coverUrl = await _uploadService.Upload(bookCreateRequest.File);
+            }
+
             Book book = new Book(bookCreateRequest.Title, bookCreateRequest.AuthorName, 
-                bookCreateRequest.ReleaseYear, bookCreateRequest.Description);
+                bookCreateRequest.ReleaseYear, bookCreateRequest.Description, coverUrl);
+
             int newBookId = await _bookRepository.AddBook(book);
 
             return new SuccessResult<int>(newBookId);

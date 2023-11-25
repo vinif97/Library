@@ -10,6 +10,7 @@ namespace Library.Integration.Tests
         protected readonly HttpClient Client;
         protected readonly LibraryContext DbContext;
         protected const string MediaTypeJson = "application/json";
+        protected readonly string BaseDirectory = AppDomain.CurrentDomain.BaseDirectory;
 
         public IntegrationTestBase(IntegrationTestFactory<Program, LibraryContext> factory)
         {
