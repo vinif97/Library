@@ -15,7 +15,7 @@ namespace Library.Application.DTOs
         public int ReleaseYear { get; set; }
         [AuthorNameValidation]
         public string AuthorName { get; set; }
-        public IFormFile? File { get; set; }
+        public IFormFile? CoverImage { get; set; }
 
         public BookCreateRequest() { }
 

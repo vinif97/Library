@@ -30,9 +30,9 @@ namespace Library.Application.Services
         {
             string? coverUrl = null;
 
-            if (bookCreateRequest.File is not null)
+            if (bookCreateRequest.CoverImage is not null)
             {
-                coverUrl = await _uploadImageService.Upload(bookCreateRequest.File);
+                coverUrl = await _uploadImageService.Upload(bookCreateRequest.CoverImage);
             }
 
             Book book = new Book(bookCreateRequest.Title, bookCreateRequest.AuthorName, 
@@ -96,14 +96,14 @@ namespace Library.Application.Services
 
             book.UpdatePropertiesIfNotNull(bookUpdateRequest, BookSetMethodsPreffix);
 
-            if (bookUpdateRequest.File is not null)
+            if (bookUpdateRequest.CoverImage is not null)
             {
                 if (!string.IsNullOrWhiteSpace(book.CoverUrl))
                 {
                     await _deleteImageService.Delete(book.CoverUrl);
                 }
 
-                book.SetCoverUrl(await _uploadImageService.Upload(bookUpdateRequest.File));
+                book.SetCoverUrl(await _uploadImageService.Upload(bookUpdateRequest.CoverImage));
             }
 
             await _bookRepository.UpdateBook(book);

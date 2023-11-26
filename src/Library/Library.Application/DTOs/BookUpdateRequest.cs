@@ -13,6 +13,6 @@ namespace Library.Application.DTOs
         [MaxLength(8000)]
         public string? Description { get; set; }
         public int? ReleaseYear { get; set; }
-        public IFormFile? File { get; set; }
+        public IFormFile? CoverImage { get; set; }
     }
 }

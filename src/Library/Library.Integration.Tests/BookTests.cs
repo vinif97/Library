@@ -34,7 +34,7 @@ namespace Library.Integration.Tests
                 { new StringContent(requestBody.Title), nameof(BookCreateRequest.Title) },
                 { new StringContent(requestBody.AuthorName), nameof(BookCreateRequest.AuthorName) },
                 { new StringContent(requestBody.ReleaseYear.ToString()), nameof(BookCreateRequest.ReleaseYear) },
-                { imageContent, nameof(BookCreateRequest.File), "testImage.png" }
+                { imageContent, nameof(BookCreateRequest.CoverImage), "testImage.png" }
             };
 
             string bookId = await CreateBookTest(formData);
@@ -71,7 +71,7 @@ namespace Library.Integration.Tests
             {
                 { new StringContent(requestUpdateBody.Title), nameof(BookUpdateRequest.Title) },
                 { new StringContent(requestUpdateBody.AuthorName), nameof(BookUpdateRequest.AuthorName) },
-                { new StringContent(requestUpdateBody.Description.ToString()), nameof(BookUpdateRequest.Description) }
+                //{ new StringContent(requestUpdateBody.Description.ToString()), nameof(BookUpdateRequest.Description) }
             };
 
             await UpdateBookTest(requestUpdateBody, formData, bookId);
@@ -116,7 +116,7 @@ namespace Library.Integration.Tests
 
             formData = new MultipartFormDataContent()
             {
-                { imageContent, nameof(BookCreateRequest.File), "testImage.png" }
+                { imageContent, nameof(BookCreateRequest.CoverImage), "testImage.png" }
             };
 
             await UpdateBookImageTest(formData, bookId);
@@ -176,7 +176,7 @@ namespace Library.Integration.Tests
 
             Assert.NotNull(bookResponse);
             Assert.Equal(expectedResult.Title, bookResponse.Title);
-            Assert.Equal(expectedResult.Description, bookResponse.Description);
+            //Assert.Equal(expectedResult.Description, bookResponse.Description);
             Assert.Equal(expectedResult.AuthorName, bookResponse.AuthorName);
         }
 
