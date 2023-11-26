@@ -9,6 +9,7 @@ namespace Library.Application.DTOs
         [MaxLength(256)]
         [Required]
         public string Title { get; set; }
+        [MaxLength(8000)]
         public string? Description { get; set; }
         [Required]
         public int ReleaseYear { get; set; }

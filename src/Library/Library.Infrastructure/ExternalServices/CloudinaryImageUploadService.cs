@@ -1,19 +1,25 @@
-﻿using CloudinaryDotNet;
-using CloudinaryDotNet.Actions;
+﻿using CloudinaryDotNet.Actions;
+using CloudinaryDotNet;
 using Library.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
+using Library.Application.Options;
 
-namespace Library.Application.Services
+namespace Library.Infrastructure.ExternalServices
 {
     public class CloudinaryImageUploadService : IImageUploadService
     {
-        private Cloudinary Cloudinary;
-        private string CloudName = "dodxs9dph";
-        private string ApiKey = "683212422911247";
-        private string ApiSecret = "9yCXWsoT955FDG5LAKe7d1FyreY";
+        private readonly Cloudinary Cloudinary;
+        private readonly string CloudName;
+        private readonly string ApiKey;
+        private readonly string ApiSecret;
 
-        public CloudinaryImageUploadService()
+        public CloudinaryImageUploadService(IOptions<CloudinaryOptions> cloudinaryOptions)
         {
+            CloudName = cloudinaryOptions.Value.CloudName;
+            ApiKey = cloudinaryOptions.Value.ApiKey;
+            ApiSecret = cloudinaryOptions.Value.ApiSecret;
+
             var account = new Account(CloudName, ApiKey, ApiSecret);
             Cloudinary = new Cloudinary(account);
             Cloudinary.Api.Secure = true;
@@ -30,7 +36,7 @@ namespace Library.Application.Services
                 File = new FileDescription(file.FileName, memoryStream),
             };
 
-            var result = Cloudinary.Upload(uploadparams);
+            var result = await Cloudinary.UploadAsync(uploadparams);
 
             if (result.Error != null)
             {
@@ -38,7 +44,6 @@ namespace Library.Application.Services
             }
 
             return result.SecureUrl.ToString();
-
         }
     }
 }

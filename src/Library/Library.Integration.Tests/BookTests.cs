@@ -1,5 +1,4 @@
 ﻿using Library.Application.DTOs;
-using Library.Application.Result;
 using Library.Domain.Entities;
 using Library.Infrastructure;
 using System.Net;
@@ -22,7 +21,7 @@ namespace Library.Integration.Tests
         }
 
         [Fact]
-        public async Task AddBookSuccessFullyWithImage_WhenRequestIsValid()
+        public async Task AddBookSuccessfullyWithImage_WhenRequestIsValid()
         {
             BookCreateRequest requestBody = new("Harry Different", "Harry Valderdead", 2022);
 
@@ -44,7 +43,7 @@ namespace Library.Integration.Tests
         }
 
         [Fact]
-        public async Task UpdateBookSuccessFully_WhenRequestIsValid()
+        public async Task UpdateBookSuccessfully_WhenRequestIsValid()
         {
             BookCreateRequest requestBody = new("Harry The Same", "Amanda Oliveira", 1999);
 
@@ -68,11 +67,18 @@ namespace Library.Integration.Tests
                 Description = "A Short Description"
             };
 
-            await UpdateBookTest(requestUpdateBody, bookId);
+            formData = new MultipartFormDataContent()
+            {
+                { new StringContent(requestUpdateBody.Title), nameof(BookCreateRequest.Title) },
+                { new StringContent(requestUpdateBody.AuthorName), nameof(BookCreateRequest.AuthorName) },
+                { new StringContent(requestUpdateBody.Description.ToString()), nameof(BookCreateRequest.ReleaseYear) }
+            };
+
+            await UpdateBookTest(requestUpdateBody, formData, bookId);
         }
 
         [Fact]
-        public async Task DeleteBookByIdSuccessFully_WhenRequestIsValid()
+        public async Task DeleteBookByIdSuccessfully_WhenRequestIsValid()
         {
             BookCreateRequest requestBody = new("Ordem dos Guerreiros", "Willson Zamarchi da Rosé", 2005);
 
@@ -88,6 +94,32 @@ namespace Library.Integration.Tests
             await DeleteBookTest(bookId);
 
             await ReturnNotFoundWhenGetBookDoesntExists(bookId);
+        }
+
+        [Fact]
+        async Task UpdateImageSuccessfully_WhenImageIsSent()
+        {
+            BookCreateRequest requestBody = new("Harry Different", "Harry Valderdead", 2022);
+
+            var formData = new MultipartFormDataContent()
+            {
+                { new StringContent(requestBody.Title), nameof(BookCreateRequest.Title) },
+                { new StringContent(requestBody.AuthorName), nameof(BookCreateRequest.AuthorName) },
+                { new StringContent(requestBody.ReleaseYear.ToString()), nameof(BookCreateRequest.ReleaseYear) },
+            };
+
+            string bookId = await CreateBookTest(formData);
+
+            string PathToFile = Path.Combine(BaseDirectory, "Data\\Images\\testImage.png");
+            using var fileToUpload = File.OpenRead(PathToFile);
+            using var imageContent = new StreamContent(fileToUpload);
+
+            formData = new MultipartFormDataContent()
+            {
+                { imageContent, nameof(BookCreateRequest.File), "testImage.png" }
+            };
+
+            await UpdateBookImageTest(formData, bookId);
         }
 
         private async Task GetBookByIdTest(BookCreateRequest expectedResult, string bookId)
@@ -113,9 +145,9 @@ namespace Library.Integration.Tests
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
-        private async Task<string> CreateBookTest(MultipartFormDataContent formData)
+        private async Task<string> CreateBookTest(HttpContent content)
         {
-            var response = await Client.PostAsync($"/{BookApiPath}", formData);
+            var response = await Client.PostAsync($"/{BookApiPath}", content);
             var result = await response.Content.ReadAsStringAsync();
 
             Assert.NotEmpty(result);
@@ -133,11 +165,8 @@ namespace Library.Integration.Tests
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
         }
 
-        private async Task UpdateBookTest(BookUpdateRequest expectedResult, string bookId)
+        private async Task UpdateBookTest(BookUpdateRequest expectedResult, HttpContent content, string bookId)
         {
-            string payload = JsonSerializer.Serialize(expectedResult);
-            HttpContent content = new StringContent(payload, Encoding.UTF8, MediaTypeJson);
-
             var response = await Client.PatchAsync($"/{BookApiPath}/{bookId}", content);
             var result = await response.Content.ReadAsStringAsync();
             var bookResponse = JsonSerializer.Deserialize<BookResponse>(result, _options);
@@ -149,6 +178,19 @@ namespace Library.Integration.Tests
             Assert.Equal(expectedResult.Title, bookResponse.Title);
             Assert.Equal(expectedResult.Description, bookResponse.Description);
             Assert.Equal(expectedResult.AuthorName, bookResponse.AuthorName);
+        }
+
+        private async Task UpdateBookImageTest(HttpContent content, string bookId)
+        {
+            var response = await Client.PatchAsync($"/{BookApiPath}/{bookId}", content);
+            var result = await response.Content.ReadAsStringAsync();
+            var bookResponse = JsonSerializer.Deserialize<BookResponse>(result, _options);
+
+            Assert.NotNull(response);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            Assert.NotNull(bookResponse);
+            Assert.NotNull(bookResponse.CoverUrl);
         }
     }
 }

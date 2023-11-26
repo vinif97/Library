@@ -68,7 +68,7 @@ namespace Library.WebAPI.Controllers
         }
 
         [HttpPatch("{id:int}")]
-        public async Task<IActionResult> UpdateBook(int id, [FromBody]BookUpdateRequest bookUpdateRequest)
+        public async Task<IActionResult> UpdateBook(int id, [FromForm]BookUpdateRequest bookUpdateRequest)
         {
             var result = await _bookService.UpdateBook(bookUpdateRequest, id);
 

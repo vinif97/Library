@@ -14,16 +14,16 @@ namespace Library.Application.Services
         private const string BookSetMethodsPreffix = "Set";
         private readonly IMapper _mapper;
         private readonly IBookRepository _bookRepository;
-        private readonly IImageUploadService _uploadService;
-        private readonly IImageRetrievaService _retrievalService;
+        private readonly IImageUploadService _uploadImageService;
+        private readonly IImageDeleteService _deleteImageService;
 
-        public BookService(IMapper mapper, IBookRepository bookRepository, IImageUploadService uploadService,
-            IImageRetrievaService retrievalService)
+        public BookService(IMapper mapper, IBookRepository bookRepository, IImageUploadService imageUploadService,
+            IImageDeleteService deleteImageService)
         {
             _bookRepository = bookRepository;
             _mapper = mapper;
-            _uploadService = uploadService;
-            _retrievalService = retrievalService;
+            _uploadImageService = imageUploadService;
+            _deleteImageService = deleteImageService;
         }
 
         public async Task<IResult> AddBook(BookCreateRequest bookCreateRequest)
@@ -32,7 +32,7 @@ namespace Library.Application.Services
 
             if (bookCreateRequest.File is not null)
             {
-                coverUrl = await _uploadService.Upload(bookCreateRequest.File);
+                coverUrl = await _uploadImageService.Upload(bookCreateRequest.File);
             }
 
             Book book = new Book(bookCreateRequest.Title, bookCreateRequest.AuthorName, 
@@ -45,7 +45,18 @@ namespace Library.Application.Services
 
         public async Task DeleteBook(int id)
         {
-            await _bookRepository.DeleteBook(id);
+            Book? book = await _bookRepository.GetBookById(id);
+
+            if (book is not null)
+            {
+                if (book.CoverUrl is not null)
+                {
+
+                    await _deleteImageService.Delete(book.CoverUrl);
+                }
+
+                await _bookRepository.DeleteBook(id);
+            }
         }
 
         public async Task<IEnumerable<BookResponse>> GetAllBooks()
@@ -85,6 +96,16 @@ namespace Library.Application.Services
             }
 
             book.UpdatePropertiesIfNotNull(bookUpdateRequest, BookSetMethodsPreffix);
+
+            if (bookUpdateRequest.File is not null)
+            {
+                if (!string.IsNullOrWhiteSpace(book.CoverUrl))
+                {
+                    await _deleteImageService.Delete(book.CoverUrl);
+                }
+
+                book.SetCoverUrl(await _uploadImageService.Upload(bookUpdateRequest.File));
+            }
 
             await _bookRepository.UpdateBook(book);
 

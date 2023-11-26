@@ -1,16 +1,14 @@
-using AutoMapper;
 using Library.Application.Mappers;
+using Library.Application.Options;
 using Library.Application.Services;
 using Library.Application.Services.Interfaces;
 using Library.Domain.Repositories;
 using Library.Infrastructure;
+using Library.Infrastructure.ExternalServices;
 using Library.Infrastructure.Repositories;
 using Library.WebAPI;
 using Library.WebAPI.Middlewares;
-using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection;
-using System.Security.Cryptography;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,8 +29,11 @@ builder.Services.AddDbContext<LibraryContext>(options =>
 
 builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<IBookRepository, BookRepository>();
-builder.Services.AddScoped<IImageRetrievaService, CloudinaryImageRetrievalService>();
+builder.Services.AddScoped<IImageDeleteService, CloudinaryImageDeleteService>();
 builder.Services.AddScoped<IImageUploadService, CloudinaryImageUploadService>();
+
+builder.Services.Configure<CloudinaryOptions>(
+    builder.Configuration.GetSection(nameof(CloudinaryOptions)));
 
 var app = builder.Build();
 

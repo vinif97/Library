@@ -4,7 +4,7 @@ namespace Library.Domain.Entities
 {
     public class Book
     {
-        public int BookId { get; set; }
+        public int BookId { get; private set; }
         public string Title { get; private set; }
         public string? Description { get; private set; }
         public string? CoverUrl { get; private set; }
@@ -22,9 +22,11 @@ namespace Library.Domain.Entities
             ReleaseYear = releaseYear;
         }
 
+        public void SetBookId(int bookId) => BookId = bookId;
         public void SetAuthorName(string fullname) => Author = new Author(fullname);
         public void SetDescription(string description) => Description = description;
         public void SetTitle(string title) => Title = title;
         public void SetReleaseYear(int releaseYear) => ReleaseYear = releaseYear;
+        public void SetCoverUrl(string coverUrl) => CoverUrl = coverUrl;
     }
 }

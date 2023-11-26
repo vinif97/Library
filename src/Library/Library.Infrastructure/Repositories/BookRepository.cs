@@ -29,13 +29,14 @@ namespace Library.Infrastructure.Repositories
 
         public async Task<IEnumerable<Book>> GetBooks()
         {
-            var books = await _context.Books.ToListAsync();
+            var books = await _context.Books.AsNoTracking().ToListAsync();
             return books;
         }
 
         public async Task DeleteBook(int id)
         {
-            Book book = new Book() { BookId = id };
+            Book book = new Book();
+            book.SetBookId(id);
             _context.Books.Attach(book);
             _context.Books.Remove(book);
             await _context.SaveChangesAsync();
