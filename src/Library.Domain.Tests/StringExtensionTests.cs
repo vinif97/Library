@@ -8,7 +8,7 @@ namespace Library.Domain.Tests
         [InlineData("Vinicius", "França de Oliveira", "Vinicius França de Oliveira")]
         [InlineData("Vinicius", "", "Vinicius")]
         [InlineData("Vinicius", "França", "     Vinicius França ")]
-        public void GetFirstNameAndSurnameCorrectlyFromFullName(string expectedFirstName, string expectedSurname, string fullName)
+        public void GetFirstNameAndSurname_CorrectlyFromFullName_WhenValid(string expectedFirstName, string expectedSurname, string fullName)
         {
             (string firstname, string surname) = fullName.GetFirstNameAndSurnameFromFullName();
 
@@ -17,7 +17,7 @@ namespace Library.Domain.Tests
         }
 
         [Fact]
-        public void GetFirstNameAndSurnameFromFullNameThrowsExceptionWhenNameIsEmpty()
+        public void GetFirstNameAndSurnameFromFullName_ThrowsException_WhenNameIsEmpty()
         {
             var fullName = "";
 

@@ -7,7 +7,7 @@ namespace Library.Domain.Repositories
         Task<int> AddBook(Book book);
         Task<Book?> GetBookById(int id);
         Task<IEnumerable<Book>> GetBooks();
-        Task DeleteBook(int id);
+        Task DeleteBook(Book book);
         Task UpdateBook(Book book);
     }
 }

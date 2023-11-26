@@ -10,7 +10,7 @@ namespace Library.Application.Tests.Helpers
         private const string SetMethodsPreffix = "Set";
 
         [Fact]
-        public void UpdatePropertiesSuccessfullyWhenValid()
+        public void UpdatePropertiesSuccessfully_WhenValid()
         { 
             Book book = new Book("Test Name", "Wrong name", 1950);
             BookUpdateRequest updateRequest = new BookUpdateRequest() 
@@ -32,7 +32,7 @@ namespace Library.Application.Tests.Helpers
         }
 
         [Fact]
-        public void DontUpdatePropertiesWhenNull()
+        public void DontUpdateProperties_WhenNull()
         {
             string expectedTitle = "New and Better Title";
             string expectedaAuthorName = "Amanda França de Oliveira";

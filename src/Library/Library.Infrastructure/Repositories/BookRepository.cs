@@ -33,11 +33,8 @@ namespace Library.Infrastructure.Repositories
             return books;
         }
 
-        public async Task DeleteBook(int id)
+        public async Task DeleteBook(Book book)
         {
-            Book book = new Book();
-            book.SetBookId(id);
-            _context.Books.Attach(book);
             _context.Books.Remove(book);
             await _context.SaveChangesAsync();
         }

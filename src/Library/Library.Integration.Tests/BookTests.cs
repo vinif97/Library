@@ -69,9 +69,9 @@ namespace Library.Integration.Tests
 
             formData = new MultipartFormDataContent()
             {
-                { new StringContent(requestUpdateBody.Title), nameof(BookCreateRequest.Title) },
-                { new StringContent(requestUpdateBody.AuthorName), nameof(BookCreateRequest.AuthorName) },
-                { new StringContent(requestUpdateBody.Description.ToString()), nameof(BookCreateRequest.ReleaseYear) }
+                { new StringContent(requestUpdateBody.Title), nameof(BookUpdateRequest.Title) },
+                { new StringContent(requestUpdateBody.AuthorName), nameof(BookUpdateRequest.AuthorName) },
+                { new StringContent(requestUpdateBody.Description.ToString()), nameof(BookUpdateRequest.Description) }
             };
 
             await UpdateBookTest(requestUpdateBody, formData, bookId);

@@ -15,7 +15,7 @@ namespace Library.Application.Tests.Helpers
         }
 
         [Fact]
-        public void ReturnTrueWhenErrorResultHasSpecifiedError()
+        public void ReturnTrue_WhenErrorResultHasSpecifiedError()
         {
             bool hasError = ErrorResult.CheckIfErrorExists(AppErrorCode.NotFound);
 
@@ -23,7 +23,7 @@ namespace Library.Application.Tests.Helpers
         }
 
         [Fact]
-        public void ReturnFalseWhenErrorResultDoesntHaveSpecifiedError()
+        public void ReturnFalse_WhenErrorResultDoesntHaveSpecifiedError()
         {
             bool hasError = ErrorResult.CheckIfErrorExists(AppErrorCode.InvalidEntity);
 

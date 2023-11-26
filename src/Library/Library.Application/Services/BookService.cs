@@ -51,11 +51,10 @@ namespace Library.Application.Services
             {
                 if (book.CoverUrl is not null)
                 {
-
                     await _deleteImageService.Delete(book.CoverUrl);
                 }
 
-                await _bookRepository.DeleteBook(id);
+                await _bookRepository.DeleteBook(book);
             }
         }
 
